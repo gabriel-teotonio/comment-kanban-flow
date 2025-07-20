@@ -61,7 +61,26 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				kanban: {
+					todo: 'hsl(var(--kanban-todo))',
+					'todo-foreground': 'hsl(var(--kanban-todo-foreground))',
+					'todo-border': 'hsl(var(--kanban-todo-border))',
+					progress: 'hsl(var(--kanban-progress))',
+					'progress-foreground': 'hsl(var(--kanban-progress-foreground))',
+					'progress-border': 'hsl(var(--kanban-progress-border))',
+					review: 'hsl(var(--kanban-review))',
+					'review-foreground': 'hsl(var(--kanban-review-foreground))',
+					'review-border': 'hsl(var(--kanban-review-border))',
+					done: 'hsl(var(--kanban-done))',
+					'done-foreground': 'hsl(var(--kanban-done-foreground))',
+					'done-border': 'hsl(var(--kanban-done-border))'
 				}
+			},
+			backgroundImage: {
+				'gradient-primary': 'var(--gradient-primary)',
+				'gradient-card': 'var(--gradient-card)',
+				'gradient-board': 'var(--gradient-board)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
