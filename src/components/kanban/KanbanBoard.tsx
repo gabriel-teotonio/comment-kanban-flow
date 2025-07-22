@@ -1,38 +1,38 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import {
   DndContext,
   DragEndEvent,
-  DragOverEvent,
   DragOverlay,
   DragStartEvent,
   PointerSensor,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { arrayMove } from '@dnd-kit/sortable';
 import { Button } from '@/components/ui/button';
-import { Plus, Search, Filter } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { KanbanColumn } from './KanbanColumn';
 import { TaskCard } from './TaskCard';
 import { TaskForm } from './TaskForm';
-import { useKanban } from '@/contexts/KanbanContext';
-import { Task, TaskStatus } from '@/types/kanban';
+import { Task, Status } from '@/types/kanban';
+import { useTasks, useUpdateTaskStatus } from '@/hooks/useTasks';
 
 const columns = [
-  { id: 'todo' as TaskStatus, title: 'A Fazer' },
-  { id: 'in-progress' as TaskStatus, title: 'Em Progresso' },
-  { id: 'review' as TaskStatus, title: 'Em Revisão' },
-  { id: 'done' as TaskStatus, title: 'Concluído' },
+  { id: 'PENDING' as Status, title: 'A Fazer' },
+  { id: 'IN_PROGRESS' as Status, title: 'Em Progresso' },
+  { id: 'TESTING' as Status, title: 'Em Testes' },
+  { id: 'DONE' as Status, title: 'Concluído' },
 ];
 
 export function KanbanBoard() {
-  const { state, moveTask } = useKanban();
+  const { data: tasks = [], isLoading, refetch } = useTasks();
+  const updateTaskStatus = useUpdateTaskStatus();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [isTaskFormOpen, setIsTaskFormOpen] = useState(false);
-  const [taskFormDefaultStatus, setTaskFormDefaultStatus] = useState<TaskStatus>('todo');
+  const [taskFormDefaultStatus, setTaskFormDefaultStatus] = useState<Status>('PENDING');
   const [searchTerm, setSearchTerm] = useState('');
-  const [priorityFilter, setPriorityFilter] = useState<string>('all');
+
+  console.log(tasks);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -42,36 +42,28 @@ export function KanbanBoard() {
     })
   );
 
-  // Filter tasks based on search and priority
+  // Filter tasks based on search
   const filteredTasks = useMemo(() => {
-    let filtered = state.tasks;
-
+    let filtered = tasks;
     if (searchTerm) {
       filtered = filtered.filter(task =>
         task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        task.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        task.assignee?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        task.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+        (task.description?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
       );
     }
-
-    if (priorityFilter !== 'all') {
-      filtered = filtered.filter(task => task.priority === priorityFilter);
-    }
-
     return filtered;
-  }, [state.tasks, searchTerm, priorityFilter]);
+  }, [tasks, searchTerm]);
 
   // Group tasks by status
   const tasksByStatus = useMemo(() => {
     return columns.reduce((acc, column) => {
       acc[column.id] = filteredTasks.filter(task => task.status === column.id);
       return acc;
-    }, {} as Record<TaskStatus, Task[]>);
+    }, {} as Record<Status, Task[]>);
   }, [filteredTasks]);
 
   const handleDragStart = (event: DragStartEvent) => {
-    const task = state.tasks.find(t => t.id === event.active.id);
+    const task = tasks.find(t => t.id === event.active.id);
     if (task) {
       setActiveTask(task);
     }
@@ -80,28 +72,24 @@ export function KanbanBoard() {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     setActiveTask(null);
-
     if (!over) return;
-
-    const taskId = active.id as string;
-    const newStatus = over.id as TaskStatus;
-
-    // Check if it's a valid column
+    const taskId = Number(active.id);
+    const newStatus = over.id as Status;
     if (columns.some(col => col.id === newStatus)) {
-      const task = state.tasks.find(t => t.id === taskId);
+      const task = tasks.find(t => t.id === taskId);
       if (task && task.status !== newStatus) {
-        moveTask(taskId, newStatus);
+        updateTaskStatus.mutate({ id: taskId, status: newStatus });
       }
     }
   };
 
-  const handleAddTask = (status: TaskStatus) => {
+  const handleAddTask = (status: Status) => {
     setTaskFormDefaultStatus(status);
     setIsTaskFormOpen(true);
   };
 
   const handleAddTaskGeneral = () => {
-    setTaskFormDefaultStatus('todo');
+    setTaskFormDefaultStatus('PENDING');
     setIsTaskFormOpen(true);
   };
 
@@ -121,7 +109,6 @@ export function KanbanBoard() {
             Nova Tarefa
           </Button>
         </div>
-
         {/* Filters */}
         <div className="flex gap-4">
           <div className="flex-1 relative">
@@ -133,19 +120,8 @@ export function KanbanBoard() {
               className="pl-10"
             />
           </div>
-          <select
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value)}
-            className="px-3 py-2 border border-border rounded-md bg-background text-foreground"
-          >
-            <option value="all">Todas as prioridades</option>
-            <option value="high">Alta</option>
-            <option value="medium">Média</option>
-            <option value="low">Baixa</option>
-          </select>
         </div>
       </div>
-
       {/* Board */}
       <div className="flex-1 p-6 overflow-x-auto">
         <DndContext
@@ -161,25 +137,25 @@ export function KanbanBoard() {
                 title={column.title}
                 tasks={tasksByStatus[column.id]}
                 onAddTask={() => handleAddTask(column.id)}
+                isLoading={isLoading}
+                refetchTasks={refetch}
               />
             ))}
           </div>
-
           <DragOverlay>
             {activeTask ? (
               <div className="rotate-3 scale-105">
-                <TaskCard task={activeTask} />
+                <TaskCard task={activeTask} refetchTasks={refetch} />
               </div>
             ) : null}
           </DragOverlay>
         </DndContext>
       </div>
-
       {/* Task Form */}
       <TaskForm
         isOpen={isTaskFormOpen}
         onClose={() => setIsTaskFormOpen(false)}
-        defaultStatus={taskFormDefaultStatus}
+        refetchTasks={refetch}
       />
     </div>
   );

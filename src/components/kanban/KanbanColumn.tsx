@@ -4,44 +4,43 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { Plus } from 'lucide-react';
 import { TaskCard } from './TaskCard';
 import { Button } from '@/components/ui/button';
-import { TaskStatus, Task } from '@/types/kanban';
+import { Status, Task } from '@/types/kanban';
 
 interface KanbanColumnProps {
-  id: TaskStatus;
+  id: Status;
   title: string;
   tasks: Task[];
   onAddTask: () => void;
+  isLoading?: boolean;
+  refetchTasks?: () => void;
 }
 
-const columnStyles = {
-  todo: {
+const columnStyles: Record<Status, { bg: string; border: string; text: string }> = {
+  PENDING: {
     bg: 'bg-kanban-todo',
     border: 'border-kanban-todo-border',
     text: 'text-kanban-todo-foreground',
   },
-  'in-progress': {
+  IN_PROGRESS: {
     bg: 'bg-kanban-progress',
     border: 'border-kanban-progress-border',
     text: 'text-kanban-progress-foreground',
   },
-  review: {
+  TESTING: {
     bg: 'bg-kanban-review',
     border: 'border-kanban-review-border',
     text: 'text-kanban-review-foreground',
   },
-  done: {
+  DONE: {
     bg: 'bg-kanban-done',
     border: 'border-kanban-done-border',
     text: 'text-kanban-done-foreground',
   },
 };
 
-export function KanbanColumn({ id, title, tasks, onAddTask }: KanbanColumnProps) {
-  const { isOver, setNodeRef } = useDroppable({
-    id,
-  });
-
-  const style = columnStyles[id];
+export function KanbanColumn({ id, title, tasks, onAddTask, isLoading, refetchTasks }: KanbanColumnProps) {
+  const { isOver, setNodeRef } = useDroppable({ id });
+  const style = columnStyles[id] || { bg: '', border: '', text: '' };
 
   return (
     <div className="flex flex-col h-full min-w-[280px] max-w-[320px]">
@@ -49,9 +48,7 @@ export function KanbanColumn({ id, title, tasks, onAddTask }: KanbanColumnProps)
       <div className={`rounded-t-xl p-4 border-2 ${style.bg} ${style.border}`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h3 className={`font-semibold ${style.text}`}>
-              {title}
-            </h3>
+            <h3 className={`font-semibold ${style.text}`}>{title}</h3>
             <span className={`text-sm px-2 py-1 rounded-full bg-white/50 ${style.text} font-medium`}>
               {tasks.length}
             </span>
@@ -66,7 +63,6 @@ export function KanbanColumn({ id, title, tasks, onAddTask }: KanbanColumnProps)
           </Button>
         </div>
       </div>
-
       {/* Column Content */}
       <div
         ref={setNodeRef}
@@ -74,15 +70,18 @@ export function KanbanColumn({ id, title, tasks, onAddTask }: KanbanColumnProps)
           style.border
         } ${isOver ? 'bg-muted/50' : ''}`}
       >
-        <SortableContext items={tasks.map(task => task.id)} strategy={verticalListSortingStrategy}>
-          {tasks.map((task) => (
-            <div key={task.id} className="group">
-              <TaskCard task={task} />
-            </div>
-          ))}
-        </SortableContext>
-
-        {tasks.length === 0 && (
+        {isLoading ? (
+          <div className="flex items-center justify-center h-full text-muted-foreground">Carregando...</div>
+        ) : (
+          <SortableContext items={tasks.map(task => task.id)} strategy={verticalListSortingStrategy}>
+            {tasks.map((task) => (
+              <div key={task.id} className="group">
+                <TaskCard task={task} refetchTasks={refetchTasks} />
+              </div>
+            ))}
+          </SortableContext>
+        )}
+        {tasks.length === 0 && !isLoading && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <div className="text-muted-foreground text-sm">
               Nenhuma tarefa nesta coluna

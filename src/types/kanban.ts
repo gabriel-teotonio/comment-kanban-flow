@@ -1,29 +1,19 @@
-export type TaskStatus = 'todo' | 'in-progress' | 'review' | 'done';
+export type Status = 'PENDING' | 'IN_PROGRESS' | 'TESTING' | 'DONE';
 
 export interface Comment {
-  id: string;
+  id: number;
   content: string;
-  createdAt: Date;
-  author: string;
+  createdAt: string;
+  updatedAt: string;
+  taskId: number;
 }
 
 export interface Task {
-  id: string;
+  id: number;
   title: string;
-  description?: string;
-  status: TaskStatus;
-  priority: 'low' | 'medium' | 'high';
-  assignee?: string;
-  dueDate?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  description?: string | null;
+  status: Status;
+  createdAt: string;
+  updatedAt: string;
   comments: Comment[];
-  tags?: string[];
-}
-
-export interface Column {
-  id: TaskStatus;
-  title: string;
-  color: string;
-  tasks: Task[];
 }
