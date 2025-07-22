@@ -58,6 +58,11 @@ npm run dev
 * Interface do usuário responsiva
 * Suporte a múltiplos usuários
 
+**Imagens**
+<img width="1852" height="973" alt="Captura de tela de 2025-07-22 17-28-05" src="https://github.com/user-attachments/assets/83842480-bd17-461e-b472-a1e817a18520" />
+<img width="1852" height="973" alt="Captura de tela de 2025-07-22 17-28-12" src="https://github.com/user-attachments/assets/596f6f9a-40d6-4ad1-a3a1-b3f78942c474" />
+
+
 **Como usar:**
 
 1. Acesse o aplicativo em `http://localhost:5173`
