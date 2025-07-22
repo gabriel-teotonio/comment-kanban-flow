@@ -7,6 +7,11 @@
 **Descrição:**
 O Comment-Kanban-Flow é um projeto de software que visa criar um fluxo de trabalho Kanban para gerenciamento de comentários. O projeto é construído utilizando tecnologias modernas e é projetado para ser escalável e fácil de usar.
 
+**UTILIZAÇÃO DE IA**
+- No front a IA utilizada foi o lovable, usei ele para fazer setup e interface inicial do projeto.
+  posteriomente utilizei windsurf para complementar no desenvolvimento.
+- Facilitou e acelerou de forma brusca a criação da interface, componentização e configuração de design system.
+
 **Instalação:**
 
 1. Clone o repositório:
