@@ -1,73 +1,67 @@
-# Welcome to your Lovable project
 
-## Project info
 
-**URL**: https://lovable.dev/projects/71d057f8-f153-4b8a-8df4-f29c98feb7c1
+**README**
 
-## How can I edit this code?
+**Projeto:** Comment-Kanban-Flow
 
-There are several ways of editing your application.
+**Descrição:**
+O Comment-Kanban-Flow é um projeto de software que visa criar um fluxo de trabalho Kanban para gerenciamento de comentários. O projeto é construído utilizando tecnologias modernas e é projetado para ser escalável e fácil de usar.
 
-**Use Lovable**
+**Instalação:**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/71d057f8-f153-4b8a-8df4-f29c98feb7c1) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+1. Clone o repositório:
+```bash
+git clone https://github.com/gabriel-teotonio/comment-kanban-flow.git
+```
+2. Instale as dependências:
+```bash
+npm install
+```
+se não funcionar, utilize yarn:
+```bash
+npm i -g yarn
 ```
 
-**Edit a file directly in GitHub**
+```bash
+yarn
+```
+3. Inicie o servidor de desenvolvimento:
+```bash
+npm run dev
+```
+4. Acesse o aplicativo em `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+**Tecnologias utilizadas:**
 
-**Use GitHub Codespaces**
+* Front-end:
+	+ React
+	+ TypeScript
+	+ Vite
+	+ Radix UI
+	+ Lucide React
+* Back-end: 
+ + Nest JS
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+**Especificações técnicas:**
 
-## What technologies are used for this project?
+* O projeto utiliza o framework React para construir a interface do usuário.
+* O TypeScript é utilizado para tipagem estática e melhora a manutenção do código.
+* O Vite é utilizado como servidor de desenvolvimento e build tool.
+* O Radix UI é utilizado para componentes de interface do usuário.
+* O Lucide React é utilizado para ícones.
+* O Axios é utilizado para requisições HTTP.
 
-This project is built with:
+**Funcionalidades:**
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+* Gerenciamento de comentários
+* Fluxo de trabalho Kanban
+* Interface do usuário responsiva
+* Suporte a múltiplos usuários
 
-## How can I deploy this project?
+**Como usar:**
 
-Simply open [Lovable](https://lovable.dev/projects/71d057f8-f153-4b8a-8df4-f29c98feb7c1) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+1. Acesse o aplicativo em `http://localhost:5173`
+2. Crie um novo comentário clicando no botão "Novo comentário"
+3. Edite o comentário clicando no ícone de edição
+4. Mova o comentário para uma coluna diferente clicando no ícone de movimentação
+5. Exclua o comentário clicando no ícone de exclusão
